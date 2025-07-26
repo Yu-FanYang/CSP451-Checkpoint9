@@ -1,13 +1,24 @@
 # CSP451-Checkpoint9
 
-## Set up Azure VM for Docker Workload
-1.	Create an Ubuntu VM and open necessary ports on Azure portal
-VM Public IP: 20.63.24.20
+## Objective
+- Set up an Azure Ubuntu VM
+- Deploy multi-container Docker application by using `docker-compose`
+- Integrate Dockerized app with Azure Serverless components - Azure Functions
+- Create and configure a hybrid cloud-native architecture with both IaaS and PaaS
 
-2.	Install Docker and Docker Compose on the VM
 
-3.	Clone s sample multi-service Docker app including frontend, backend, and mongodb
-4.	Run command docker-compose up -d to start the applications
+## Task1: Set up Azure VM for Docker Workload
+1.	Create an Ubuntu VM in Azure portal
+- VM Public IP: 20.63.24.20
+  
+2.	Open necessary ports for the associated Security Group
+- Open ports for HTTP(80), HTTPS(443), port 3000, port 5000
+
+
+4.	Install Docker and Docker Compose on the VM
+
+5.	Clone s sample multi-service Docker app including frontend, backend, and mongodb
+6.	Run command docker-compose up -d to start the applications
    
 ## Expose Services Securely
 1.	Configure NGINX reverse proxy or expose services individually using host ports
