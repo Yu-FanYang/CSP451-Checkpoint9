@@ -8,23 +8,42 @@
 
 
 ## Task1: Set up Azure VM for Docker Workload
-1.	Create an Ubuntu VM in Azure portal
+### 1.	Create an Ubuntu VM in Azure portal
 - VM Public IP: 20.63.24.20
   
-2.	Open necessary ports for the associated Security Group
-- Open ports for HTTP(80), HTTPS(443), port 3000, port 5000
+### 2.	Open necessary ports for the associated Security Group
+- open ports for HTTP(80), HTTPS(443), port 3000, port 5000
 
+### 3.	Install Docker and Docker Compose on the VM
+- run `sudo apt update`
+- run `sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin`
 
-4.	Install Docker and Docker Compose on the VM
-
-5.	Clone s sample multi-service Docker app including frontend, backend, and mongodb
-6.	Run command docker-compose up -d to start the applications
+### 4.	Clone s sample multi-service Docker app including frontend, backend, and mongodb
+- run `git clone https://github.com/docker/awesome-compose.git`
+- cd into *awesome-compose/react-express-mongodb** and run `ls` to confirm frontend, backend, and mongodb directory
+  
+### 5. Start the applications
+- run `docker-compose up -d` to start up application 
    
-## Expose Services Securely
-1.	Configure NGINX reverse proxy or expose services individually using host ports
-•	Modify compose.yaml file to add new NGINX service
-2.	Restart compose.yaml for the update
-3.	Validate access to the app from a browser
+## Task2: Expose Services Securely
+### 1.	Configure NGINX reverse proxy
+- remain in the directory *react-express-mongodb** and run ls to find *compose.yaml** file
+- run `nano compose.yaml` and add NGINX service into the file
+- *nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - react-express**
+
+
+### 2.	Restart compose.yaml for the update
+### 3.	Validate access to the app from a browser
 •	Access http://20.63.24.20 to test frontend access
 
 ## Build a Serverless Integration Layer
