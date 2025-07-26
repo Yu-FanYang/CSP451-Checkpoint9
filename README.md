@@ -29,7 +29,7 @@
 ### 1.	Configure NGINX reverse proxy
 - remain in the directory *react-express-mongodb** and run ls to find *compose.yaml** file
 - run `nano compose.yaml` and add NGINX service into the file
-- *nginx:
+- add contents: *nginx:
     image: nginx:latest
     ports:
       - "80:80"
@@ -41,10 +41,12 @@
     networks:
       - react-express**
 
-
 ### 2.	Restart compose.yaml for the update
+- run `docker-compose down && docker-compose up -d`
+
 ### 3.	Validate access to the app from a browser
-•	Access http://20.63.24.20 to test frontend access
+- navigate to http://20.63.24.20 to display the webpage and test frontend access
+- navigate to [http](http://20.63.24.20)
 
 ## Build a Serverless Integration Layer
 1.	Create Azure Function App with an HTTP trigger
