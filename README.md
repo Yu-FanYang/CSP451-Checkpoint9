@@ -105,7 +105,6 @@ module.exports = async function (context, req) {
       - AZURE_FUNCTION_URL=https://stockalertfuncapp.azurewebsites.net/api/StockTrigger?code=xxxxxxx*
 
 ## Task4: Create a Balanced Architecture
-Present final application flow
 ### 1.	Run `docker ps` on Ubuntu VM
 ### 2.	Confirm the frontend communicates with the backend API
 - append the following script to *server.js* file in backend directory to visualize the frontend-to-backend communication
