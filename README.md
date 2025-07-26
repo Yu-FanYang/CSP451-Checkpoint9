@@ -46,19 +46,23 @@
 
 ### 3.	Validate access to the app from a browser
 - navigate to http://20.63.24.20 to display the webpage and test frontend access
-- navigate to [http](http://20.63.24.20)
+- navigate to http://20.63.24.20/api/ to display webpage and test backend access
 
-## Build a Serverless Integration Layer
-1.	Create Azure Function App with an HTTP trigger
-•	Run command to create and configure storage account on Azure
-2.	Run command to create and configure Azure Function App
-3.	Create a HTTP trigger in Azure Function App
-4.	Include a script to define trigger
-•	Define the script with the following:
-•	If the stock quantity is lower than threshold 10, it will trigger “low stock alert” to Slack for product restock and display live product data
-•	Log to blob account and display message “Stock update processed” for any update
+## Task3: Build a Serverless Integration Layer
+### 1.	Create an Azure Function App with an HTTP trigger
+- create Storage Account by running `az storage account create --name yang334storageaccount --resource-group Student-RG-1727501 --location canadacentral --sku Standard_LRS`
 
-*Script content:
+### 2.	Run command to create and configure Azure Function App
+- create Azure Function app by running `az functionapp create --resource-group Student-RG-1727501 --consumption-plan-location canadacentral --runtime node --functions-version 4 --name stockAlertFuncApp --storage-account yang334storageaccount`
+  
+### 3.	Create a HTTP trigger in Azure Function App
+- navigate to Function App > Overview page > create HTTP function
+  
+### 4.	Include a script to define trigger
+- define the script in trigger
+- if the stock quantity is lower than threshold 10, it will trigger *low stock alert** to Slack for product restock and display live product data
+- Log to blob account and display message *Stock update processed** for any update
+- *script content:
 module.exports = async function (context, req) {
   const stock = req.body;
   if (!stock || !stock.productId || stock.quantity === undefined) {
@@ -82,28 +86,44 @@ module.exports = async function (context, req) {
     status: 200,
     body: { message: "Stock update processed" }
   };
-};**
+};*
 
-5.	Slack configuration
-•	Create a new Slack account and configure a new Workplace called CSP451
-•	Add integration Stock to this channel
-•	Stock will send alert to #all-csp451 for incoming webhooks
-6.	Add variables for Azure Function App under Environment Variables tab
-•	It requires Name and Value to add variables
-•	Add variables for Webhooks and Blob for the script
-•	Acquire Webhooks URL by enabling Incoming Webhooks
-•	Acquire Blob connection string under Storage account > Security + Networking > Access keys
-7.	On UbuntuVM, add the Azure Function key in compose.yaml to link the function with Docker
-## Create a Balanced Architecture
+### 5.	Slack configuration
+- create a new Slack account and configure a new Workplace called *CSP451*
+- Add integration *Stock* to this channel
+- configure the settings for *Stock* page so it will send alert to #all-csp451 for incoming webhooks when the Function is triggered
+  
+### 6.	Add variables for Azure Function App under Environment Variables tab
+- variable syntax: Name and Value
+- add variables for Webhooks and Blob for the script
+- navigate to Slack page> under configuration setting for Stock > click Webhooks > click Enable Incoming Webhooks > copy Webhooks URL
+-	navigate to storage account > Security + Networking > Access keys > copy blob connection string
+-	copy and paste the URL and string for values to create variables
+  
+### 7.	On UbuntuVM, add the Azure Function key in compose.yaml to link the function with Docker
+- *environment:
+      - AZURE_FUNCTION_URL=https://stockalertfuncapp.azurewebsites.net/api/StockTrigger?code=xxxxxxx*
+
+## Task4: Create a Balanced Architecture
 Present final application flow
-1.	Run docker ps on Ubuntu VM
-2.	Confirm the frontend communicates with the backend API
-•	Append the following script to server.js file in backend directory to visualize the frontend-to-backend communication
-•	Access the web page http://20.63.24.20/api/ping
-•	Run docker-compose logs -f backend to capture the backend logs in real-time
-•	The log shows “Ping received from frontend!” to confirm frontend communicates with backend API
-3.	Conform Azure Function reacts to events like "low stock"
-•	Execute Azure Function on trigger
-•	Upon triggering, it shows custom message “Stock update processed” to update the inventory
-4.	Confirm Azure Function execution will trigger an alert for API result 
-•	Execute the Function to run command that stock inventory is below 10. It send “low stock alert” to Slack Stock page and display real-time product inventory information
+### 1.	Run `docker ps` on Ubuntu VM
+### 2.	Confirm the frontend communicates with the backend API
+- append the following script to *server.js* file in backend directory to visualize the frontend-to-backend communication
+- *module.exports = app;
+  app.get("/api/ping", (req, res) => {
+  console.log("Ping received from frontend!");
+  res.json({ status: "Backend connection confirmed!" });
+  });*
+  
+- access the web page http://20.63.24.20/api/ping
+-	then run `docker-compose logs -f backend` to capture the backend logs in real-time
+-	the log shows “Ping received from frontend!” to confirm frontend communicates with backend API
+  
+### 3.	Conform Azure Function reacts to events like "low stock"
+- Execute Azure Function on trigger
+- Upon triggering, it shows custom message “Stock update processed” to update the inventory
+  
+### 4.	Confirm Azure Function execution will trigger an alert for API result 
+- Execute the Function to run command that stock inventory is below 10
+- the function will be triggered and send “low stock alert” to Slack Stock page
+- display real-time product inventory information "Low stock alert for widget-123: 2 units left"
